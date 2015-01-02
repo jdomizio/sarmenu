@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+    <style>
+        .overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 10000;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+<article id="app" class="container" data-bind="with: sarmenu">
+    <section class="row">
+        <h1 class="page-header">Sarmenu</h1>
+        <p><strong>S</strong>tand <strong>A</strong>lone <strong>R</strong>eplacment Menu</p>
+        <p>
+            An alternative for the bootstrap dropdown javascript control using knockout and jquery.  Intended to be used alongside bootstrap javascript components, or at least
+            with bootstrap css.
+        </p>
+    </section>
+    <section class="row">
+        <h3>Basic Example</h3>
+        <p>This shows the default behavior for the binding and viewModel.  The binding is applied to the element that is to trigger the dropdown.</p>
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <button class="btn" data-bind="click: simple.open.bind(simple)">Open</button>
+                        <button class="btn" data-bind="click: simple.close.bind(simple)">Close</button>
+                    </div>
+                </div>
+                <nav class="navbar navbar-default" style="z-index: 101;">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <div class="navbar-brand">Flexmenu Binding</div>
+                        </div>
+                        <div class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown" style="cursor: pointer;">
+                                    <a class="dropdown-toggle" role="button" data-bind="sarmenu: simple">
+                                        Dropdown Menu
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li role="presentation"><a role="menuitem" data-bind="click: item1">Item one</a></li>
+                                        <li role="presentation"><a role="menuitem" data-bind="click: item2">Item two</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+        </div>
+    </section>
+
+    <footer class="row text-center">
+        <a href="index.html">Back</a>
+    </footer>
+</article>
+</body>
+</html>
