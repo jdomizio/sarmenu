@@ -1,12 +1,10 @@
 /**
  * Created by jdomizio on 12/31/2014.
  */
-define(function(require) {
+define('sarmenu', function(require) {
     'use strict';
 
-    var ko = require('knockout'),
-        $ = require('jquery'),
-        DropOverlay = require('./dropoverlay');
+    var DropOverlay = require('dropoverlay');
 
     var sharedOverlay = new DropOverlay();
 

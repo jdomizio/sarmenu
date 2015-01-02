@@ -2,12 +2,12 @@ define(function(require) {
     'use strict';
 
     var ko = require('knockout'),
-        FlexMenu = require('../../../../src/sarmenu');
+        s = require('sarmenu');
 
     function ViewModel() {
         var self = this;
 
-        this.simple = new FlexMenu({
+        this.simple = new s.Sarmenu({
             options: {
                 slide: true,
                 overlay: true,

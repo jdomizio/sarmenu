@@ -1,10 +1,8 @@
 /**
  * Created by jdomizio on 1/2/2015.
  */
-define(function(require) {
+define('dropoverlay', function(require) {
     'use strict';
-
-    var $ = require('jquery');
 
     function DropOverlay() {
         this.isShowing = false;
