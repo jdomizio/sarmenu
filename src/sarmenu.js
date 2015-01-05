@@ -5,7 +5,8 @@ define('sarmenu', function(require) {
     'use strict';
 
     var DropOverlay = require('dropoverlay'),
-        util = require('util');
+        util = require('util'),
+        globalConfig = require('config');
 
     var sharedOverlay = new DropOverlay();
 
