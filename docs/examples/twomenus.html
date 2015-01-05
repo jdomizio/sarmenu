@@ -18,42 +18,41 @@
     </style>
 </head>
 <body>
-<article id="app" class="container" data-bind="with: sarmenu">
+<article id="app" class="container" data-bind="with: twomenus">
     <section class="row">
         <h1 class="page-header">Sarmenu</h1>
-        <p><strong>S</strong>tand <strong>A</strong>lone <strong>R</strong>eplacment Menu</p>
-        <p>
-            An alternative for the bootstrap dropdown javascript control using knockout and jquery.  Intended to be used alongside bootstrap javascript components, or at least
-            with bootstrap css.
-        </p>
     </section>
     <section class="row">
-        <h3>Basic Example</h3>
-        <p>This shows the default behavior for the binding and viewModel.  The binding is applied to the element that is to trigger the dropdown.</p>
+        <h3>Multiple menus</h3>
+        <p>Some things aren't working here.</p>
         <div class="panel panel-default">
             <section class="panel-body">
                 <h4>Demo</h4>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <button class="btn" data-bind="click: simple.open.bind(simple)">Open</button>
-                        <button class="btn" data-bind="click: simple.close.bind(simple)">Close</button>
-                    </div>
-                </div>
                 <nav class="navbar navbar-default" style="z-index: 101;">
                     <div class="container-fluid">
                         <div class="navbar-header">
-                            <div class="navbar-brand">Flexmenu Binding</div>
+                            <div class="navbar-brand">Menus</div>
                         </div>
                         <div class="navbar-collapse collapse">
                             <ul class="nav navbar-nav">
                                 <li class="dropdown" style="cursor: pointer;">
-                                    <a class="dropdown-toggle" role="button" data-bind="sarmenu: simple">
-                                        Dropdown Menu
+                                    <a class="dropdown-toggle" role="button" data-bind="sarmenu: menu1">
+                                        Dropdown Menu 1
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li role="presentation"><a role="menuitem" data-bind="click: item1">Item one</a></li>
-                                        <li role="presentation"><a role="menuitem" data-bind="click: item2">Item two</a></li>
+                                        <li role="presentation"><a role="menuitem">Item one</a></li>
+                                        <li role="presentation"><a role="menuitem">Item two</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown" style="cursor: pointer;">
+                                    <a class="dropdown-toggle" role="button" data-bind="sarmenu: menu2">
+                                        Dropdown Menu 2
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li role="presentation"><a role="menuitem">Item three</a></li>
+                                        <li role="presentation"><a role="menuitem">Item four</a></li>
                                     </ul>
                                 </li>
                             </ul>

@@ -3,10 +3,12 @@
  */
 define(function(require) {
 
-    var sarmenu = require('./sarmenuViewModel');
+    var sarmenu = require('./sarmenuViewModel'),
+        TwoMenus = require('./twoMenus');
 
     function AppViewModel() {
         this.sarmenu = new sarmenu.ViewModel();
+        this.twomenus = new TwoMenus();
     }
 
     return AppViewModel;

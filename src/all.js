@@ -4,10 +4,12 @@
 define('sarmenu-main', function(require) {
 
     var Sarmenu = require('sarmenu'),
-        DropOverlay = require('dropoverlay');
+        DropOverlay = require('dropoverlay'),
+        config = require('config');
 
     return {
         Sarmenu: Sarmenu,
-        DropOverlay: DropOverlay
+        DropOverlay: DropOverlay,
+        config: config
     };
 });

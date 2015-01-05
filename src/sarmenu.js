@@ -4,86 +4,29 @@
 define('sarmenu', function(require) {
     'use strict';
 
-    var DropOverlay = require('dropoverlay');
+    var DropOverlay = require('dropoverlay'),
+        util = require('util');
 
     var sharedOverlay = new DropOverlay();
 
-    function bindingHandler(Type, method) {
-        return function (element, valueAccessor, allBindings) {
-            var params = valueAccessor(),
-                instance;
-
-            instance = (params instanceof Type) ? params : new Type();
-
-            return instance[method](element, valueAccessor, allBindings);
-        };
-    }
-
-    function getParent($this) {
-        var selector = $this.attr('data-target');
-
-        if (!selector) {
-            selector = $this.attr('href');
-            selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, ''); // strip for ie7
-        }
-
-        var $parent = selector && $(selector);
-
-        return $parent && $parent.length ? $parent : $this.parent();
-    }
-
-    function getOpenMenuHandler(options) {
-        options = options || {};
-
-        if(options.slide) {
-            return function($element) {
-                $element.find('.dropdown-menu').first().stop(true, true).slideDown();
-            };
-        }
-        else if(options.fade) {
-            return function($element) {
-                $element.find('.dropdown-menu').first().stop(true, true).fadeIn();
-            };
-        }
-        return function($element) {
-            $element.toggleClass('open');
-        };
-    }
-
-    function getCloseMenuHandler(options) {
-        options = options || {};
-
-        if(options.slide) {
-            return function($element) {
-                $element.find('.dropdown-menu').first().stop(true, true).slideUp();
-            };
-        }
-        else if(options.fade) {
-            return function($element) {
-                $element.find('.dropdown-menu').first().stop(true, true).fadeOut();
-            };
-        }
-        return function($element) {
-            $element.toggleClass('open');
-        };
-    }
+    var SARMENU_DEFAULT_OPT = {};
 
     function Sarmenu(params) {
         params = params || {};
 
         this.isOpen = ko.observable(false);
-        this.options = params.options;
+        this.options = params.options || SARMENU_DEFAULT_OPT;
         this.element = null;
 
-        this.openMenu = getOpenMenuHandler(this.options);
-        this.closeMenu = getCloseMenuHandler(this.options);
+        this.openMenu = util.getOpenMenuHandler(this.options);
+        this.closeMenu = util.getCloseMenuHandler(this.options);
     }
 
     Sarmenu.prototype.open = function() {
         var $element, $parent, isActive;
 
         $element = $(this.element);
-        $parent = getParent($element);
+        $parent = util.getParent($element);
 
         $element.trigger('focus');
 
@@ -97,7 +40,7 @@ define('sarmenu', function(require) {
         var $element, $parent, isActive;
 
         $element = $(this.element);
-        $parent = getParent($element);
+        $parent = util.getParent($element);
 
         if(this.isOpen()) {
             this.closeMenu($parent);
@@ -161,7 +104,7 @@ define('sarmenu', function(require) {
     };
 
     ko.bindingHandlers['sarmenu'] = {
-        'init': bindingHandler(Sarmenu, 'init')
+        'init': util.bindingHandler(Sarmenu, 'init')
     };
 
     return Sarmenu;

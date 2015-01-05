@@ -3,6 +3,13 @@
  */
 module.exports = function(grunt) {
 
+    var sourceFiles = [];
+
+    grunt.file.recurse('src', function(path, root, rel, name) {
+        console.log(path);
+        sourceFiles.push(('./' + rel + name).replace('.js', ''));
+    });
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         requirejs: {
@@ -10,7 +17,7 @@ module.exports = function(grunt) {
                 options: {
                     baseUrl: '.',
                     name: './node_modules/almond/almond',
-                    include: ['./src/sarmenu', './src/dropoverlay', './src/all'],
+                    include: sourceFiles,
                     mainConfigFile: './util/debug-config.js',
                     out: './build/<%= pkg.name %>.debug.js',
                     findNestedDependencies: false,
@@ -30,7 +37,7 @@ module.exports = function(grunt) {
                 options: {
                     baseUrl: '.',
                     name: './node_modules/almond/almond',
-                    include: ['./src/sarmenu', './src/dropoverlay', './src/all'],
+                    include: sourceFiles,
                     mainConfigFile: './util/release-config.js',
                     out: './build/<%= pkg.name %>.js',
                     findNestedDependencies: false,
