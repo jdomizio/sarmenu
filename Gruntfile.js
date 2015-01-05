@@ -6,8 +6,9 @@ module.exports = function(grunt) {
     var sourceFiles = [];
 
     grunt.file.recurse('src', function(path, root, rel, name) {
-        console.log(path);
-        sourceFiles.push(('./' + rel + name).replace('.js', ''));
+        var sf = ('./' + path).replace('.js', '');
+        console.log(sf);
+        sourceFiles.push(sf);
     });
 
     grunt.initConfig({

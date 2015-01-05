@@ -449,6 +449,120 @@ var requirejs, require, define;
 define("node_modules/almond/almond", function(){});
 
 /**
+ * Created by jdomizio on 1/2/2015.
+ */
+define('sarmenu-main', ['require','sarmenu','dropoverlay','config'],function(require) {
+
+    var Sarmenu = require('sarmenu'),
+        DropOverlay = require('dropoverlay'),
+        config = require('config');
+
+    return {
+        Sarmenu: Sarmenu,
+        DropOverlay: DropOverlay,
+        config: config
+    };
+});
+define("src/all", function(){});
+
+/**
+ * Created by Cristel on 1/3/2015.
+ */
+define('config', ['require'],function(require) {
+
+    var config = {
+
+        /** Allows multiple instances of the sarmenu to be open at once */
+        'allowMultipleMenus': true
+    };
+
+    return config;
+});
+define("src/config", function(){});
+
+/**
+ * Created by jdomizio on 1/2/2015.
+ */
+define('dropoverlay', ['require'],function(require) {
+    
+
+    function DropOverlay() {
+        this.isShowing = false;
+        this.currentTimeout = null;
+        this.currentOverlay = null;
+    }
+
+    DropOverlay.prototype.hide = function(time) {
+        var self = this;
+
+        time = arguments.length ? time : 100;
+
+        this.currentTimeout = window.setTimeout(function() {
+            $('.kobs-overlay').fadeOut(time, function () {
+                $(this).remove();
+            });
+            self.isShowing = false;
+            self.currentTimeout = null;
+            self.currentOverlay = null;
+        }, 200);
+    };
+
+    DropOverlay.prototype.create = function($element, options) {
+        var container, i, len;
+
+        if(this.currentTimeout) {
+            window.clearTimeout(this.currentTimeout);
+            $(this.currentOverlay).off('click touchstart');
+            if(options.click) {
+                $(this.currentOverlay).on('click touchstart', function(e) {
+                    options.click(e);
+                });
+            }
+            return;
+        }
+
+        container = $('<div/>');
+        container.addClass('kobs-overlay');
+        if(options.overlayWrapClasses) {
+
+            for(i = 0, len = options.overlayWrapClasses.length; i < len; ++i) {
+                container.addClass(options.overlayWrapClasses[i]);
+            }
+        }
+//            if(options.overlayDepth) {
+//                container.attr('style', 'z-index: ' + options.overlayDepth + ' !important;');
+//            }
+
+        var overlay = $('<div/>');
+        if(options.overlayClasses) {
+
+            for(i = 0, len = options.overlayClasses.length; i < len; ++i) {
+                overlay.addClass(options.overlayClasses[i]);
+            }
+        }
+        if(options.overlayDepth) {
+            overlay.attr('style', 'z-index: ' + options.overlayDepth + ' !important;');
+        }
+
+        container.append(overlay);
+
+        if(options.click) {
+            container.on('click touchstart', function(e){
+                options.click(e);
+            });
+        }
+
+        this.currentOverlay = container;
+
+        $element.append(container).fadeIn(100);
+        this.isShowing = true;
+    };
+
+    return DropOverlay;
+});
+define("src/dropoverlay", function(){});
+
+/**
  * Created by jdomizio on 12/31/2014.
  */
 define('sarmenu', ['require','dropoverlay','util'],function(require) {
@@ -561,88 +675,6 @@ define('sarmenu', ['require','dropoverlay','util'],function(require) {
 });
 define("src/sarmenu", function(){});
 
-/**
- * Created by jdomizio on 1/2/2015.
- */
-define('dropoverlay', ['require'],function(require) {
-    
-
-    function DropOverlay() {
-        this.isShowing = false;
-        this.currentTimeout = null;
-        this.currentOverlay = null;
-    }
-
-    DropOverlay.prototype.hide = function(time) {
-        var self = this;
-
-        time = arguments.length ? time : 100;
-
-        this.currentTimeout = window.setTimeout(function() {
-            $('.kobs-overlay').fadeOut(time, function () {
-                $(this).remove();
-            });
-            self.isShowing = false;
-            self.currentTimeout = null;
-            self.currentOverlay = null;
-        }, 200);
-    };
-
-    DropOverlay.prototype.create = function($element, options) {
-        var container, i, len;
-
-        if(this.currentTimeout) {
-            window.clearTimeout(this.currentTimeout);
-            $(this.currentOverlay).off('click touchstart');
-            if(options.click) {
-                $(this.currentOverlay).on('click touchstart', function(e) {
-                    options.click(e);
-                });
-            }
-            return;
-        }
-
-        container = $('<div/>');
-        container.addClass('kobs-overlay');
-        if(options.overlayWrapClasses) {
-
-            for(i = 0, len = options.overlayWrapClasses.length; i < len; ++i) {
-                container.addClass(options.overlayWrapClasses[i]);
-            }
-        }
-//            if(options.overlayDepth) {
-//                container.attr('style', 'z-index: ' + options.overlayDepth + ' !important;');
-//            }
-
-        var overlay = $('<div/>');
-        if(options.overlayClasses) {
-
-            for(i = 0, len = options.overlayClasses.length; i < len; ++i) {
-                overlay.addClass(options.overlayClasses[i]);
-            }
-        }
-        if(options.overlayDepth) {
-            overlay.attr('style', 'z-index: ' + options.overlayDepth + ' !important;');
-        }
-
-        container.append(overlay);
-
-        if(options.click) {
-            container.on('click touchstart', function(e){
-                options.click(e);
-            });
-        }
-
-        this.currentOverlay = container;
-
-        $element.append(container).fadeIn(100);
-        this.isShowing = true;
-    };
-
-    return DropOverlay;
-});
-define("src/dropoverlay", function(){});
-
 define('util', ['require'],function(require) {
 
     function bindingHandler(Type, method) {
@@ -713,21 +745,6 @@ define('util', ['require'],function(require) {
     };
 });
 define("src/util", function(){});
-
-/**
- * Created by jdomizio on 1/2/2015.
- */
-define('sarmenu-main', ['require','sarmenu','dropoverlay'],function(require) {
-
-    var Sarmenu = require('sarmenu'),
-        DropOverlay = require('dropoverlay');
-
-    return {
-        Sarmenu: Sarmenu,
-        DropOverlay: DropOverlay
-    };
-});
-define("src/all", function(){});
 
 //The modules for your project will be inlined above
 //this snippet. Ask almond to synchronously require the
