@@ -7,6 +7,9 @@ define(function(require) {
     var sm = require('sarmenu');
 
     function TwoMenus() {
+
+        sm.config.allowMultipleMenus = false;
+
         this.menu1 = new sm.Sarmenu({
             options: { slide: true }
         });
