@@ -486,15 +486,21 @@ define("src/config", function(){});
 define('dropoverlay', ['require'],function(require) {
     
 
+    var instances = 0;
+
+    console.trace = console.trace || console.log;
+
     function DropOverlay() {
         this.isShowing = false;
         this.currentTimeout = null;
         this.currentOverlay = null;
+        instances += 1;
     }
 
     DropOverlay.prototype.hide = function(time) {
         var self = this;
 
+        console.trace('(hide) currentTimeout: ' + this.currentTimeout);
         time = arguments.length ? time : 100;
 
         this.currentTimeout = window.setTimeout(function() {
@@ -510,6 +516,7 @@ define('dropoverlay', ['require'],function(require) {
     DropOverlay.prototype.create = function($element, options) {
         var container, i, len;
 
+        console.trace('(create) currentTimeout: ' + this.currentTimeout);
         if(this.currentTimeout) {
             window.clearTimeout(this.currentTimeout);
             $(this.currentOverlay).off('click touchstart');
@@ -572,10 +579,19 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         util = require('util'),
         globalConfig = require('config');
 
+    /** Shared Overlay control for Sarmenu instances */
     var sharedOverlay = new DropOverlay();
 
+    /**
+     * Default options for new Sarmenus
+     * @const
+     */
     var SARMENU_DEFAULT_OPT = {};
 
+    /**
+     * shared global state for all Sarmenu instances.
+     * @type {{getNextId, current: *}}
+     */
     var globalState = {
         getNextId: (function() {
             var id = ko.observable(1);
@@ -589,6 +605,11 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         current: ko.observable()
     };
 
+    /**
+     * Creates a new Sarmenu viewModel
+     * @param params - Initialization paramters
+     * @constructor
+     */
     function Sarmenu(params) {
         params = params || {};
 
@@ -601,6 +622,9 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         this.closeMenu = util.getCloseMenuHandler(this.options);
     }
 
+    /**
+     * Opens the menu
+     */
     Sarmenu.prototype.open = function() {
         var $element, $parent, isActive;
 
@@ -612,10 +636,14 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         if(!this.isOpen()) {
             this.openMenu($parent);
         }
-        this.isOpen(true);
         globalState.current(this._id);
+        this.isOpen(true);
+
     };
 
+    /**
+     * Closes the menu
+     */
     Sarmenu.prototype.close = function() {
         var $element, $parent, isActive;
 
@@ -625,13 +653,23 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         if(this.isOpen()) {
             this.closeMenu($parent);
         }
+        if(globalState.current() == this._id) {
+            globalState.current(undefined);
+        }
         this.isOpen(false);
     };
 
+    /**
+     * Toggles the menu
+     */
     Sarmenu.prototype.toggle = function() {
         this.isOpen() ? this.close() : this.open();
     };
 
+    /**
+     * Handles keydown events
+     * @param e - the event
+     */
     Sarmenu.prototype.keydown = function(e) {
         if (!/(38|40|27)/.test(e.keyCode)) return;
 
@@ -643,6 +681,12 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         this.close();
     };
 
+    /**
+     * Knockout initialization for sarmenu binding
+     * @param element - The element to which the sarmenu is being bound
+     * @param valueAccessor - The value being passed to the binding
+     * @param allBindings - All other bindings being bound on the element.
+     */
     Sarmenu.prototype.init = function(element, valueAccessor, allBindings) {
         var self = this,
             params,
@@ -653,8 +697,7 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
 
         this.element = element;
 
-        nearestDropdown = $(element).next('.dropdown-menu');
-
+        // TODO: would it be better to just use jQuery to set this event?
         ko.applyBindingsToNode(element, {
             'click': function () {
                 self.toggle();
@@ -663,6 +706,7 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
 
         $(document).on('keydown', self.keydown.bind(self));
 
+        nearestDropdown = $(element).next('.dropdown-menu');
         nearestDropdown.each(function() {
             ko.applyBindingsToNode(this, {
                 'click': function() {
@@ -674,10 +718,10 @@ define('sarmenu', ['require','dropoverlay','util','config'],function(require) {
         if(this.options.overlay) {
             this.isOpen.subscribe(function(value) {
                 if(value) {
-                    sharedOverlay.create($(self.options.overlayTarget || '.kobs-overlay-target'), self.options);
+                    sharedOverlay.create($(self.options.overlayTarget || '.sarmenu-overlay-target'), self.options);
                 }
                 else {
-                    sharedOverlay.hide(0);
+                    sharedOverlay.hide(self.options.hideSpeed || 200);
                 }
             })
         }

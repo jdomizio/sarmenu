@@ -4,15 +4,21 @@
 define('dropoverlay', function(require) {
     'use strict';
 
+    var instances = 0;
+
+    console.trace = console.trace || console.log;
+
     function DropOverlay() {
         this.isShowing = false;
         this.currentTimeout = null;
         this.currentOverlay = null;
+        instances += 1;
     }
 
     DropOverlay.prototype.hide = function(time) {
         var self = this;
 
+        console.trace('(hide) currentTimeout: ' + this.currentTimeout);
         time = arguments.length ? time : 100;
 
         this.currentTimeout = window.setTimeout(function() {
@@ -28,6 +34,7 @@ define('dropoverlay', function(require) {
     DropOverlay.prototype.create = function($element, options) {
         var container, i, len;
 
+        console.trace('(create) currentTimeout: ' + this.currentTimeout);
         if(this.currentTimeout) {
             window.clearTimeout(this.currentTimeout);
             $(this.currentOverlay).off('click touchstart');
