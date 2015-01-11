@@ -79,6 +79,12 @@ define('sarmenu', function(require) {
         this.close();
     };
 
+    /**
+     * Knockout initialization for sarmenu binding
+     * @param element - The element to which the sarmenu is being bound
+     * @param valueAccessor - The value being passed to the binding
+     * @param allBindings - All other bindings being bound on the element.
+     */
     Sarmenu.prototype.init = function(element, valueAccessor, allBindings) {
         var self = this,
             params,
